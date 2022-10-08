@@ -3,6 +3,10 @@ import smartpy as sp
 import geocoder
 
 home_add = geocoder.ip('me')
+#initilalise - user id, tag id, home geolocation
+#record: timestamp of verification 
+# + boolean (geolocation of verification != home geolocation)
+# query NFT level
 
 def getCurrLoc():
     curr_loc = geocoder.ip('me')
