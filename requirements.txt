@@ -1,1 +1,2 @@
+geocoder==1.38.1
 smartpy==0.2.2

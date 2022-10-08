@@ -1,5 +1,11 @@
 import smartpy as sp
 
+import geocoder
+
+home_add = geocoder.ip('me')
+
+def getCurrLoc():
+    curr_loc = geocoder.ip('me')
 class PhraseKeeper(sp.Contract):
     def __init__(self, initialPhrase):
         self.init(phrase = initialPhrase)
@@ -9,10 +15,10 @@ class PhraseKeeper(sp.Contract):
 
 @sp.add_test(name = "Initial Test")
 def test():
-    scenario = sp.testScenario()
+    scenario = sp.test_scenario()
     scenario.h1("Initial String")
     
-    c1 = PhraseKeeper("Let's Test")
+    c1 = PhraseKeeper(str(home_add.latlng))
     scenario += c1
     scenario.h2("Update String")
     scenario += c1.setPhrase("Test Success")
