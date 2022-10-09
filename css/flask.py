@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask import Flask, render_template, redirect, url_for
+from datetime import datetime
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
@@ -19,7 +20,7 @@ def index():
     longt = j['longtitude']
     latit= j['latitude']
     
-
+    form = InitialiseForm()
     if request.method == 'POST':
         if request.form.get('action1') == 'VALUE1':
             pass # do something
@@ -41,5 +42,29 @@ class InitialiseForm(FlaskForm):
 
 class LogForm(FlaskForm):
     tagID = StringField('Type the 10 character Tag ID', validators=[DataRequired()])
-
+    date = datetime.now()
     submit = SubmitField('Submit')
+
+
+def notify():
+    from pywebpush import webpush, WebPushException
+    WEBPUSH_VAPID_PRIVATE_KEY = 'xxx'
+
+    items = Subscriber.query.filter(Subscriber.is_active == True).all()
+    count = 0
+    for _item in items:
+        try:
+            webpush(
+                subscription_info=_item.subscription_info_json,
+                data="Please Log Your Wear Now",
+                vapid_private_key=WEBPUSH_VAPID_PRIVATE_KEY,
+                vapid_claims={
+                    "sub": "mailto:aweare.info@gmail.com"
+                }
+            )
+            count += 1
+        except WebPushException as ex:
+            logging.exception("webpush fail")
+
+
+    return "{} notification(s) sent".format(count)
